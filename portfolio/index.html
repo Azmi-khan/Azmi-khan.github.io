@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azmi Rehman Khan — Autonomous Vehicle Engineering Student</title>
+  <meta name="description" content="Portfolio of Azmi Rehman Khan, Autonomous Vehicle Engineering student specializing in Computer Vision, AI-driven systems and full-stack data architecture." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ============ LOADER ============ -->
+  <div id="loader">
+    <div class="loader-title">Azmi<span>Khan</span></div>
+    <div class="loader-lines" id="loader-lines"></div>
+    <div class="loader-bar-track"><div class="loader-bar-fill" id="loader-bar-fill"></div></div>
+  </div>
+
+  <!-- ============ NAVBAR ============ -->
+  <header id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">Azmi <span>Khan</span></a>
+
+      <nav class="nav-links" id="nav-links">
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="assets/documents/resume.pdf" class="btn" target="_blank" rel="noopener">Resume ↗</a>
+        <button id="theme-toggle" aria-label="Toggle light/dark theme">
+          <span id="theme-icon">☾</span>
+        </button>
+        <button class="nav-mobile-toggle" id="nav-mobile-toggle" aria-label="Toggle menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section id="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Munich, DE · Open to Internships</span>
+        <h1 class="hero-headline">Engineering intelligent systems for <span class="accent">autonomous vehicles.</span></h1>
+        <p class="hero-sub">
+          B.Eng Autonomous Vehicle Engineering student at Technische Hochschule Ingolstadt,
+          specializing in Computer Vision and AI-driven systems. I build ML pipelines,
+          low-latency streaming architectures and interactive data tools with Python, FastAPI
+          and Streamlit — turning complex engineering logic into working software.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">View My Work ↗</a>
+          <a href="#contact" class="btn">Get In Touch →</a>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="hero-panel-photo">
+          <!-- TODO: replace with your photo -->
+          <span>[ profile photo ]</span>
+        </div>
+        <div class="location-readout">
+          <span><span class="label">LOC</span> Munich, Germany</span>
+          <span>48.1351° N, 11.5820° E</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TELEMETRY TICKER (signature element) ============ -->
+  <div id="telemetry-ticker">
+    <div class="ticker-track" id="ticker-track">
+      <!-- populated by JS, duplicated for seamless loop -->
+    </div>
+  </div>
+
+  <!-- ============ SKILLS MARQUEE ============ -->
+  <section id="skills-marquee">
+    <div class="marquee-track" id="marquee-track">
+      <!-- populated by JS, duplicated for seamless loop -->
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about">
+    <div class="container">
+      <span class="eyebrow">Who I Am</span>
+      <h2 class="section-heading">Autonomous Vehicle Engineering Student.</h2>
+
+      <div class="about-grid">
+        <div class="about-bio">
+          <p>
+            I'm <strong>Azmi Rehman Khan</strong>, an Autonomous Vehicle Engineering student at
+            Technische Hochschule Ingolstadt, specializing in Computer Vision, AI-driven systems
+            and full-stack data architecture.
+          </p>
+          <p>
+            Originally from Pakistan, I moved to Germany to study engineering and have since built
+            custom machine learning pipelines, low-latency streaming architectures and interactive
+            data interfaces — decoupling complex engineering logic into intelligent, reliable
+            software infrastructure.
+          </p>
+          <p>
+            Currently based in Munich, Germany. Looking for internships and collaborations on
+            challenging engineering and AI problems.
+          </p>
+        </div>
+
+        <div class="about-cards">
+          <div class="about-card">
+            <h3>Computer Vision</h3>
+            <p>Real-time gesture and vision pipelines with OpenCV and MediaPipe, processing video at 30 FPS with sub-50ms latency.</p>
+          </div>
+          <div class="about-card">
+            <h3>AI &amp; RAG Systems</h3>
+            <p>LangChain and LangGraph pipelines, LLM agents, prompt engineering and retrieval-augmented generation.</p>
+          </div>
+          <div class="about-card">
+            <h3>Full-Stack Data Architecture</h3>
+            <p>Decoupled FastAPI + Streamlit systems, WebSockets and containerized microservices with Docker.</p>
+          </div>
+          <div class="about-card">
+            <h3>Data &amp; Signal Processing</h3>
+            <p>Digital filtering, Fourier analysis and telemetry visualization across large real-world datasets.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EDUCATION ============ -->
+  <section id="education">
+    <div class="container">
+      <span class="eyebrow">Learning Path</span>
+      <h2 class="section-heading">Education.</h2>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">09/2024 – Present</div>
+          <h3>B.Eng Autonomous Vehicle Engineering</h3>
+          <div class="timeline-org"><a href="https://www.thi.de/" target="_blank" rel="noopener">Technische Hochschule Ingolstadt</a> · Ingolstadt, Germany</div>
+          <p class="timeline-desc">
+            Core modules: Algorithms &amp; Data Structures, Foundations of Machine Learning,
+            Digital Signal Processing, Sensor Data Processing &amp; Fusion, Model-based SW Engineering.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Machine Learning</span>
+            <span class="tag">Sensor Fusion</span>
+            <span class="tag">DSP</span>
+            <span class="tag">Software Engineering</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience">
+    <div class="container">
+      <span class="eyebrow">Professional Journey</span>
+      <h2 class="section-heading">Experience.</h2>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">06/2024 – Present</div>
+          <h3>Rider</h3>
+          <div class="timeline-org">Flink · Nürnberg, Germany</div>
+          <p class="timeline-desc">
+            Developed strong reliability, time management and adaptability while performing
+            high-volume deliveries using digital logistics systems in a fast-paced environment.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Logistics</span>
+            <span class="tag">Time Management</span>
+            <span class="tag">Reliability</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects">
+    <div class="container">
+      <span class="eyebrow">Engineering Log</span>
+      <h2 class="section-heading">Projects.</h2>
+      <p class="projects-hint">Scroll to explore</p>
+
+      <div class="projects-scroll-outer" id="projects-scroll-outer">
+        <div class="projects-scroll-sticky" id="projects-scroll-sticky">
+          <div class="projects-track" id="projects-track">
+        <article class="project-card">
+          <span class="project-log-id">LOG-01</span>
+          <h3>Race Strategy AI: RAG Telemetry Dashboard</h3>
+          <div class="project-stack">Python · FastAPI · Streamlit · LangChain · Gemini API</div>
+          <p>
+            A Retrieval-Augmented Generation pipeline over the FIA Formula 1 Sporting Regulations,
+            cutting manual rule-verification time by 80%. Dual-engine FastAPI + Streamlit
+            architecture handling 50+ simultaneous requests, with 95% context-aware query accuracy.
+          </p>
+          <div class="tag-row">
+            <span class="tag">RAG</span>
+            <span class="tag">LangChain</span>
+            <span class="tag">Prompt Engineering</span>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <span class="project-log-id">LOG-02</span>
+          <h3>Esports EV Hunter</h3>
+          <div class="project-stack">Python · FastAPI · Docker · n8n · LangGraph</div>
+          <p>
+            A containerized microservices pipeline ingesting 1,000+ real-time JSON data points from
+            live sports APIs. A LangGraph agent state machine identifies Expected Value discrepancies
+            across bookmakers with zero manual intervention, via a 24/7 automated workflow.
+          </p>
+          <div class="tag-row">
+            <span class="tag">LangGraph</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Automation</span>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <span class="project-log-id">LOG-03</span>
+          <h3>GestureVision</h3>
+          <div class="project-stack">Python · OpenCV · MediaPipe · WebSockets</div>
+          <p>
+            A real-time gesture-controlled computer vision pipeline processing video at 30 FPS.
+            Low-latency WebSocket-based FastAPI backend (sub-50ms) streams into a Streamlit HUD
+            with live gesture interaction and multiple visual filters.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Computer Vision</span>
+            <span class="tag">Real-Time</span>
+            <span class="tag">HUD</span>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <span class="project-log-id">LOG-04</span>
+          <h3>F1 Race Analyzer</h3>
+          <div class="project-stack">Streamlit · FastF1 · Plotly</div>
+          <p>
+            An interactive telemetry dashboard visualizing 100,000+ rows of live lap-time and
+            telemetry data per session, with optimized caching that cut load times by 40%.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Data Visualization</span>
+            <span class="tag">Telemetry</span>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <span class="project-log-id">LOG-05</span>
+          <h3>Music Data Analysis: Spotify Trends</h3>
+          <div class="project-stack">Python · Pandas · Plotly · Tkinter</div>
+          <p>
+            Analyzed ~39,000 Spotify tracks to compare decade-over-decade audio trends (2000s vs.
+            2010s). Built a robust ETL pipeline to clean, standardize and merge complex datasets,
+            then visualized audio features like BPM, energy and danceability through an interactive
+            Tkinter/Plotly GUI for genre-based insights.
+          </p>
+          <div class="tag-row">
+            <span class="tag">ETL</span>
+            <span class="tag">Data Analysis</span>
+            <span class="tag">Plotly</span>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <span class="project-log-id">LOG-06</span>
+          <h3>Electric Signal Measurement Labs</h3>
+          <div class="project-stack">Circuit Design · Spectral Analysis</div>
+          <p>
+            Analog circuit design and spectral analysis lab work — digital filtering, frequency
+            response analysis and DFT/IDFT-based spectral signal processing grounded in Fourier
+            series and Nyquist sampling theory.
+          </p>
+          <div class="tag-row">
+            <span class="tag">DSP</span>
+            <span class="tag">Circuit Design</span>
+          </div>
+        </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SKILLS DETAIL ============ -->
+  <section id="skills">
+    <div class="container">
+      <span class="eyebrow">Expertise</span>
+      <h2 class="section-heading">Technical Skills.</h2>
+
+      <div class="skills-grid">
+        <div class="skills-cat">
+          <h3>Languages &amp; Frameworks</h3>
+          <div class="tag-row">
+            <span class="tag">Python</span><span class="tag">C++</span><span class="tag">HTML</span>
+            <span class="tag">FastAPI</span><span class="tag">Streamlit</span><span class="tag">React</span>
+          </div>
+        </div>
+        <div class="skills-cat">
+          <h3>AI / Computer Vision</h3>
+          <div class="tag-row">
+            <span class="tag">Computer Vision</span><span class="tag">MediaPipe</span><span class="tag">OpenCV</span>
+            <span class="tag">Gesture Recognition</span><span class="tag">Image Processing</span><span class="tag">ROI Tracking</span>
+            <span class="tag">Human-Computer Interaction</span>
+          </div>
+        </div>
+        <div class="skills-cat">
+          <h3>Data Architecture &amp; AI</h3>
+          <div class="tag-row">
+            <span class="tag">RAG Pipelines</span><span class="tag">LangChain</span><span class="tag">LangGraph</span>
+            <span class="tag">LLM Applications</span><span class="tag">ETL Pipelines</span><span class="tag">Vector Embeddings</span>
+            <span class="tag">Prompt Engineering</span><span class="tag">AI Agents</span>
+          </div>
+        </div>
+        <div class="skills-cat">
+          <h3>Data &amp; Analysis</h3>
+          <div class="tag-row">
+            <span class="tag">Pandas</span><span class="tag">NumPy</span><span class="tag">Plotly</span>
+            <span class="tag">Time/Frequency-Domain Plotting</span><span class="tag">Statistical Modeling (EV)</span>
+            <span class="tag">API Ingestion</span><span class="tag">JSON Parsing</span>
+          </div>
+        </div>
+        <div class="skills-cat">
+          <h3>Tools &amp; Infrastructure</h3>
+          <div class="tag-row">
+            <span class="tag">Docker</span><span class="tag">n8n</span><span class="tag">Git/GitHub</span>
+            <span class="tag">CI/CD</span><span class="tag">Postman</span><span class="tag">WebSockets</span>
+            <span class="tag">REST APIs</span><span class="tag">Microservices</span>
+          </div>
+        </div>
+        <div class="skills-cat">
+          <h3>Technical / DSP</h3>
+          <div class="tag-row">
+            <span class="tag">Digital Filtering</span><span class="tag">Frequency Response</span>
+            <span class="tag">DFT / IDFT</span><span class="tag">Fourier Series</span>
+            <span class="tag">Nyquist Sampling</span><span class="tag">Circuit Design</span>
+          </div>
+        </div>
+        <div class="skills-cat">
+          <h3>Languages</h3>
+          <div class="tag-row">
+            <span class="tag">English — C1</span><span class="tag">German — A2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="container">
+      <span class="eyebrow">Connect With Me</span>
+      <h2 class="section-heading">Let's build something great.</h2>
+      <p>
+        Interested in collaborations, internships or discussing software, AI or any of my
+        projects? I'd love to hear from you.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:azmikhan2023@gmail.com" class="btn btn-primary">✉ Email</a>
+        <a href="https://www.linkedin.com/in/Azmi_Rehman_khan" target="_blank" rel="noopener" class="btn">in LinkedIn</a>
+        <a href="https://github.com/Azmi-khan" target="_blank" rel="noopener" class="btn">⌥ GitHub</a>
+        <a href="tel:+4917613174581" class="btn">☎ +49 176 1317 4581</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    © 2026 Azmi Rehman Khan · Autonomous Vehicle Engineering Student — Munich, Germany · Open for opportunities ✦
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
