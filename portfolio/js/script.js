@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initTicker();
   initMarquee();
   initMobileNav();
-  initProjectsDrag();
-  initProjectsScrollJack();
+  initProjectsCarousel();
+  initSkillsRadar();
   initScrollReveal();
 });
 
@@ -139,9 +139,17 @@ function initMobileNav() {
   });
 }
 
-/* ---------- Projects: drag-to-scroll ---------- */
-function initProjectsDrag() {
+/* ---------- Projects: draggable glowing carousel ---------- */
+function initProjectsCarousel() {
   const track = document.getElementById("projects-track");
+  const dotsWrap = document.getElementById("project-dots");
+  const section = document.getElementById("projects");
+  const cursor = document.getElementById("ring-cursor");
+  if (!track || !section) return;
+
+  const cards = track.querySelectorAll(".project-card");
+
+  /* drag-to-scroll */
   let isDown = false;
   let startX;
   let scrollLeft;
@@ -167,75 +175,74 @@ function initProjectsDrag() {
     const walk = (x - startX) * 1.2;
     track.scrollLeft = scrollLeft - walk;
   });
-}
 
-/* ---------- Projects: scroll-linked horizontal movement (desktop) ---------- */
-function initProjectsScrollJack() {
-  const outer = document.getElementById("projects-scroll-outer");
-  const track = document.getElementById("projects-track");
-  if (!outer || !track) return;
-
-  const MIN_WIDTH = 861;
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let ticking = false;
-
-  function maxTranslate() {
-    return Math.max(0, track.scrollWidth - track.clientWidth);
-  }
-
-  function enable() {
-    outer.classList.add("js-scrolljack");
-    outer.style.height = `${maxTranslate() + window.innerHeight}px`;
-  }
-
-  function disable() {
-    outer.classList.remove("js-scrolljack");
-    outer.style.height = "auto";
-    track.style.transform = "none";
-  }
-
-  function onScroll() {
-    if (prefersReducedMotion || window.innerWidth < MIN_WIDTH) return;
-    const total = outer.offsetHeight - window.innerHeight;
-    if (total <= 0) return;
-    const rect = outer.getBoundingClientRect();
-    let progress = -rect.top / total;
-    progress = Math.min(Math.max(progress, 0), 1);
-    track.style.transform = `translateX(-${progress * maxTranslate()}px)`;
-  }
-
-  function requestScroll() {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        onScroll();
-        ticking = false;
+  /* pagination dots */
+  if (dotsWrap) {
+    cards.forEach((_, i) => {
+      const dot = document.createElement("button");
+      dot.className = "dot" + (i === 0 ? " active" : "");
+      dot.setAttribute("aria-label", `Go to project ${i + 1}`);
+      dot.addEventListener("click", () => {
+        cards[i].scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
       });
-      ticking = true;
+      dotsWrap.appendChild(dot);
+    });
+
+    const dots = dotsWrap.querySelectorAll(".dot");
+    let dotTicking = false;
+
+    function updateActiveDot() {
+      let closestIndex = 0;
+      let closestDist = Infinity;
+      cards.forEach((card, i) => {
+        const dist = Math.abs(card.getBoundingClientRect().left - track.getBoundingClientRect().left);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestIndex = i;
+        }
+      });
+      dots.forEach((d, i) => d.classList.toggle("active", i === closestIndex));
     }
+
+    track.addEventListener("scroll", () => {
+      if (!dotTicking) {
+        requestAnimationFrame(() => {
+          updateActiveDot();
+          dotTicking = false;
+        });
+        dotTicking = true;
+      }
+    }, { passive: true });
   }
 
-  function handleResize() {
-    if (prefersReducedMotion) {
-      disable();
-      return;
-    }
-    if (window.innerWidth >= MIN_WIDTH) {
-      enable();
-    } else {
-      disable();
-    }
-    onScroll();
-  }
+  /* custom ring cursor, scoped to this section only */
+  if (cursor && window.matchMedia("(min-width: 861px)").matches) {
+    section.addEventListener("mouseenter", () => {
+      section.classList.add("cursor-active");
+      cursor.classList.add("visible");
+    });
 
-  window.addEventListener("scroll", requestScroll, { passive: true });
-  window.addEventListener("resize", handleResize);
-  handleResize();
+    section.addEventListener("mouseleave", () => {
+      section.classList.remove("cursor-active");
+      cursor.classList.remove("visible");
+    });
+
+    section.addEventListener("mousemove", (e) => {
+      cursor.style.left = e.clientX + "px";
+      cursor.style.top = e.clientY + "px";
+    });
+
+    section.querySelectorAll(".project-card, .github-link, .dot").forEach(el => {
+      el.addEventListener("mouseenter", () => cursor.classList.add("hover"));
+      el.addEventListener("mouseleave", () => cursor.classList.remove("hover"));
+    });
+  }
 }
 
 /* ---------- Scroll reveal ---------- */
 function initScrollReveal() {
   const targets = document.querySelectorAll(
-    ".about-card, .timeline-item, .project-card, .skills-cat"
+    ".about-card, .timeline-item, .project-card, .radar-wrap"
   );
 
   targets.forEach(el => {
@@ -258,4 +265,258 @@ function initScrollReveal() {
   );
 
   targets.forEach(el => observer.observe(el));
+}
+
+/* ---------- Skills radar chart ---------- */
+function initSkillsRadar() {
+  const svg = document.getElementById("skills-radar");
+  const tooltip = document.getElementById("radar-tooltip");
+  const legendWrap = document.getElementById("radar-legend");
+  const wrap = document.querySelector(".radar-wrap");
+  if (!svg || !wrap) return;
+
+  const categories = {
+    Frontend:  { color: "#FFD43B", dark: "#4a3a00" },
+    Backend:   { color: "#51CF66", dark: "#0c3d18" },
+    Language:  { color: "#FF6B6B", dark: "#4a0f0f" },
+    Data:      { color: "#4DABF7", dark: "#0a2a4a" },
+    DevOps:    { color: "#FFA94D", dark: "#4a2a00" },
+    "AI/Vision": { color: "#F783AC", dark: "#4a0f2a" },
+  };
+
+  const deviconUrl = (name) =>
+    `https://cdn.jsdelivr.net/npm/devicon@2.15.1/icons/${name}/${name}-original.svg`;
+
+  const skills = [
+    { name: "React",     badge: "RX", category: "Frontend",   value: 65, icon: deviconUrl("react") },
+    { name: "HTML",      badge: "HT", category: "Frontend",   value: 80, icon: deviconUrl("html5") },
+    { name: "FastAPI",   badge: "FA", category: "Backend",    value: 90, icon: deviconUrl("fastapi") },
+    { name: "Streamlit", badge: "SL", category: "Backend",    value: 90, icon: deviconUrl("streamlit") },
+    { name: "Python",    badge: "PY", category: "Language",   value: 95, icon: deviconUrl("python") },
+    { name: "C++",       badge: "C++", category: "Language",  value: 75, icon: deviconUrl("cplusplus") },
+    { name: "Pandas",    badge: "PD", category: "Data",       value: 85, icon: deviconUrl("pandas") },
+    { name: "NumPy",     badge: "NP", category: "Data",       value: 80, icon: deviconUrl("numpy") },
+    { name: "Plotly",    badge: "PL", category: "Data",       value: 85, icon: deviconUrl("plotly") },
+    { name: "Docker",    badge: "DK", category: "DevOps",     value: 80, icon: deviconUrl("docker") },
+    { name: "Git",       badge: "GT", category: "DevOps",     value: 85, icon: deviconUrl("git") },
+    { name: "n8n",       badge: "N8", category: "DevOps",     value: 75, icon: deviconUrl("n8n") },
+    { name: "OpenCV",    badge: "OC", category: "AI/Vision",  value: 85, icon: deviconUrl("opencv") },
+    { name: "MediaPipe", badge: "MP", category: "AI/Vision",  value: 85, icon: deviconUrl("mediapipe") },
+    { name: "LangChain", badge: "LC", category: "AI/Vision",  value: 85, icon: deviconUrl("langchain") },
+  ];
+
+  const size = 520;
+  const center = size / 2;
+  const maxRadius = 180;
+  const labelRadius = maxRadius + 34;
+  const n = skills.length;
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  function pointFor(index, radius) {
+    const angle = (Math.PI * 2 * index) / n - Math.PI / 2;
+    return {
+      x: center + radius * Math.cos(angle),
+      y: center + radius * Math.sin(angle),
+    };
+  }
+
+  function el(tag, attrs) {
+    const node = document.createElementNS(svgNS, tag);
+    Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+    return node;
+  }
+
+  svg.innerHTML = "";
+
+  [0.25, 0.5, 0.75, 1].forEach((level) => {
+    const pts = skills.map((_, i) => pointFor(i, maxRadius * level));
+    const d = pts.map((p) => `${p.x},${p.y}`).join(" ");
+    svg.appendChild(el("polygon", { points: d, class: "radar-grid-ring" }));
+  });
+
+  skills.forEach((_, i) => {
+    const p = pointFor(i, maxRadius);
+    svg.appendChild(
+      el("line", { x1: center, y1: center, x2: p.x, y2: p.y, class: "radar-axis-line" })
+    );
+  });
+
+  const dataPts = skills.map((s, i) => pointFor(i, (s.value / 100) * maxRadius));
+  const dataD = dataPts.map((p) => `${p.x},${p.y}`).join(" ");
+  svg.appendChild(el("polygon", { points: dataD, class: "radar-data-shape" }));
+
+ // outer axis label badges — real logo with monogram fallback
+  const sweepTargets = [];
+
+  skills.forEach((s, i) => {
+    const p = pointFor(i, labelRadius);
+    const cat = categories[s.category];
+    const g = el("g", {});
+
+    const badgeBg = el("circle", {
+      cx: p.x, cy: p.y, r: 15,
+      class: "radar-axis-badge-bg",
+      fill: cat.dark, stroke: cat.color,
+    });
+    g.appendChild(badgeBg);
+
+    const fallbackText = el("text", {
+      x: p.x, y: p.y + 1, class: "radar-axis-badge", fill: cat.color,
+    });
+    fallbackText.textContent = s.badge;
+    fallbackText.style.display = "none";
+    g.appendChild(fallbackText);
+
+    const img = el("image", {
+      x: p.x - 10, y: p.y - 10, width: 20, height: 20,
+      href: s.icon, class: "radar-axis-logo",
+    });
+    img.addEventListener("error", () => {
+      img.style.display = "none";
+      fallbackText.style.display = "";
+    });
+    g.appendChild(img);
+
+    svg.appendChild(g);
+
+    const nameLabel = el("text", {
+      x: p.x, y: p.y + 30, class: "radar-name-label", fill: cat.color,
+    });
+    nameLabel.textContent = s.name.toUpperCase();
+    svg.appendChild(nameLabel);
+
+    sweepTargets.push({
+      bearing: (i * 360) / n,
+      badgeBg,
+      nameLabel,
+      cat,
+      hideTimer: null,
+    });
+  });
+
+  skills.forEach((s, i) => {
+    const p = pointFor(i, (s.value / 100) * maxRadius);
+    const cat = categories[s.category];
+    const node = el("circle", {
+      cx: p.x, cy: p.y, r: 5,
+      class: "radar-node",
+      fill: cat.color,
+    });
+
+    node.addEventListener("mouseenter", (e) => {
+      tooltip.textContent = `${s.name.toUpperCase()} ${s.value}%`;
+      tooltip.style.borderColor = cat.color;
+      tooltip.style.boxShadow = `0 0 16px -2px ${cat.color}`;
+      tooltip.classList.add("visible");
+    });
+
+    node.addEventListener("mousemove", (e) => {
+      const rect = wrap.getBoundingClientRect();
+      tooltip.style.left = `${e.clientX - rect.left}px`;
+      tooltip.style.top = `${e.clientY - rect.top}px`;
+    });
+
+    node.addEventListener("mouseleave", () => {
+      tooltip.classList.remove("visible");
+    });
+
+    svg.appendChild(node);
+    sweepTargets[i].node = node;
+  });
+
+  // legend
+  if (legendWrap) {
+    legendWrap.innerHTML = "";
+    Object.entries(categories).forEach(([name, cat]) => {
+      const item = document.createElement("div");
+      item.className = "legend-item";
+      item.innerHTML = `<span class="legend-dot" style="background:${cat.color}"></span>${name}`;
+      legendWrap.appendChild(item);
+    });
+  }
+
+  // rotating sweep line
+  const sweepGroup = el("g", { class: "radar-sweep-group" });
+  const sweepColor = "#8FE3D9";
+  const outerReach = labelRadius + 4;
+
+  for (let k = 6; k >= 1; k--) {
+    sweepGroup.appendChild(
+      el("line", {
+        x1: 0, y1: 0, x2: 0, y2: -outerReach,
+        stroke: sweepColor,
+        "stroke-width": 1,
+        opacity: (0.28 - k * 0.04).toFixed(2),
+        transform: `rotate(${-k * 3})`,
+      })
+    );
+  }
+
+  sweepGroup.appendChild(
+    el("line", {
+      x1: 0, y1: 0, x2: 0, y2: -outerReach,
+      class: "radar-sweep-line",
+      stroke: sweepColor,
+      "stroke-width": 1.5,
+    })
+  );
+
+  sweepGroup.setAttribute("transform", `translate(${center},${center}) rotate(0)`);
+  svg.appendChild(sweepGroup);
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReducedMotion) {
+    sweepGroup.style.display = "none";
+    return;
+  }
+
+  const HIT_THRESHOLD = 3.5;
+  const DEGREES_PER_MS = 360 / 9000;
+  let currentAngle = 0;
+  let lastTime = null;
+
+  function angularDiff(a, b) {
+    const diff = Math.abs(a - b) % 360;
+    return diff > 180 ? 360 - diff : diff;
+  }
+
+  function triggerHit(target) {
+    target.badgeBg.style.filter = `drop-shadow(0 0 8px ${target.cat.color})`;
+    target.badgeBg.setAttribute("stroke-width", 2);
+    if (target.node) {
+      target.node.style.filter = `drop-shadow(0 0 6px ${target.cat.color})`;
+      target.node.setAttribute("r", 7);
+    }
+    target.nameLabel.classList.add("visible");
+
+    clearTimeout(target.hideTimer);
+    target.hideTimer = setTimeout(() => {
+      target.badgeBg.style.filter = "";
+      target.badgeBg.setAttribute("stroke-width", 1);
+      if (target.node) {
+        target.node.style.filter = "";
+        target.node.setAttribute("r", 5);
+      }
+      target.nameLabel.classList.remove("visible");
+    }, 900);
+  }
+
+  function tick(now) {
+    if (lastTime === null) lastTime = now;
+    const delta = now - lastTime;
+    lastTime = now;
+
+    currentAngle = (currentAngle + delta * DEGREES_PER_MS) % 360;
+    sweepGroup.setAttribute("transform", `translate(${center},${center}) rotate(${currentAngle})`);
+
+    sweepTargets.forEach((target) => {
+      if (angularDiff(currentAngle, target.bearing) < HIT_THRESHOLD) {
+        triggerHit(target);
+      }
+    });
+
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
 }
