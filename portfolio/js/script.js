@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
   initProjectsCarousel();
   initSkillsRadar();
   initScrollReveal();
+  initTypewriter();
+  initHeroSlideshow(); 
+  initClock();
 });
 
 /* ---------- Boot-sequence loader ---------- */
@@ -240,32 +243,36 @@ function initProjectsCarousel() {
 }
 
 /* ---------- Scroll reveal ---------- */
+f/* ---------- Scroll Reveal Transitions ---------- */
 function initScrollReveal() {
-  const targets = document.querySelectorAll(
-    ".about-card, .timeline-item, .project-card, .radar-wrap"
-  );
-
-  targets.forEach(el => {
-    el.style.opacity = "0";
-    el.style.transform = "translateY(16px)";
-    el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+  const revealElements = document.querySelectorAll('.reveal');
+  
+  // Set up the observer to watch elements
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      // If the element crosses into the viewport
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        
+        // Optional: Stop observing once it has animated in once
+        // If you want it to fade in every time you scroll up/down, delete the line below.
+        observer.unobserve(entry.target); 
+      }
+    });
+  }, {
+    threshold: 0.15, // Triggers when 15% of the section is visible on screen
+    rootMargin: "0px 0px -50px 0px" // Triggers slightly before the exact bottom of the screen
   });
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = "1";
-          entry.target.style.transform = "translateY(0)";
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.15 }
-  );
-
-  targets.forEach(el => observer.observe(el));
+  // Attach the observer to every element with the 'reveal' class
+  revealElements.forEach(el => observer.observe(el));
 }
+
+// Make sure to call it when the page loads!
+document.addEventListener('DOMContentLoaded', () => {
+  initScrollReveal();
+  // ... your other initializers, like initHeroSlideshow()
+});
 
 /* ---------- Skills radar chart ---------- */
 function initSkillsRadar() {
@@ -519,4 +526,121 @@ function initSkillsRadar() {
   }
 
   requestAnimationFrame(tick);
+}
+/* ---------- Typewriter Animation ---------- */
+function initTypewriter() {
+  const textElement = document.getElementById("typewriter-text");
+  if (!textElement) return;
+
+  // The phrases you want to cycle through
+  const phrases = [
+    "Autonomous Vehicle Engineering Student.",
+    "Computer Vision Specialist.",
+    "Data & Signal Processing Enthusiast.",
+    "Python & AI Developer.",
+    "Problem Solver."
+  ];
+
+  let phraseIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  
+  // Timing controls (in milliseconds)
+  const typingDelay = 80;
+  const erasingDelay = 40;
+  const newTextDelay = 2000; // How long to pause before erasing
+
+  function type() {
+    const currentPhrase = phrases[phraseIndex];
+
+    if (isDeleting) {
+      // Remove a character
+      textElement.textContent = currentPhrase.substring(0, charIndex - 1);
+      charIndex--;
+    } else {
+      // Add a character
+      textElement.textContent = currentPhrase.substring(0, charIndex + 1);
+      charIndex++;
+    }
+
+    // Determine the typing speed
+    let typeSpeed = isDeleting ? erasingDelay : typingDelay;
+    
+    // Add a slight randomization to typing speed for a more human feel
+    if (!isDeleting) {
+      typeSpeed += Math.random() * 50; 
+    }
+
+    // If word is complete
+    if (!isDeleting && charIndex === currentPhrase.length) {
+      typeSpeed = newTextDelay; // Pause at the end of the phrase
+      isDeleting = true;
+    } 
+    // If word is completely erased
+    else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length; // Move to next phrase
+      typeSpeed = 500; // Brief pause before typing the next word
+    }
+
+    setTimeout(type, typeSpeed);
+  }
+
+  // Start the animation
+  setTimeout(type, newTextDelay);
+}
+/* ---------- Hero Slideshow (3D Stack) ---------- */
+function initHeroSlideshow() {
+  // Get all slides and convert NodeList to an Array
+  let slides = Array.from(document.querySelectorAll('#hero-slideshow .slide'));
+  if (slides.length <= 1) return; 
+
+  // Function to apply classes based on the array order
+  function updateSlidePositions() {
+    slides.forEach((slide, index) => {
+      // Strip old position classes
+      slide.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-hidden');
+      
+      // Assign new position based on current index
+      if (index === 0) {
+        slide.classList.add('pos-0');
+      } else if (index === 1) {
+        slide.classList.add('pos-1');
+      } else if (index === 2) {
+        slide.classList.add('pos-2');
+      } else {
+        slide.classList.add('pos-hidden');
+      }
+    });
+  }
+
+  // Set initial positions
+  updateSlidePositions();
+
+  const timeBetweenSlides = 3000; // 3 seconds
+
+  setInterval(() => {
+    // Take the front slide (index 0) and move it to the back of the array
+    const frontSlide = slides.shift();
+    slides.push(frontSlide);
+
+    // Re-apply the classes to trigger the CSS transition
+    updateSlidePositions();
+  }, timeBetweenSlides); 
+}
+
+/* ---------- Live Clock for Location Panel ---------- */
+function initClock() {
+  const clockEl = document.getElementById('live-time');
+  if (!clockEl) return;
+
+  function updateTime() {
+    const now = new Date();
+    // Formats as HH:MM:SS
+    const timeString = now.toLocaleTimeString('en-US', { hour12: false });
+    clockEl.textContent = timeString;
+  }
+  
+  updateTime(); // Run immediately so there's no 1-second delay
+  setInterval(updateTime, 1000); // Update every second
 }

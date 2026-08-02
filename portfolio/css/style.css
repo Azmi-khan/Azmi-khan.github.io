@@ -15,6 +15,8 @@
   --color-accent-2: #4FD1C5;    /* teal — telemetry readout */
   --color-border: rgba(255, 255, 255, 0.08);
   --color-grid-line: rgba(255, 255, 255, 0.04);
+  --color-neon: #D4FF00; /* The bright yellow/green from the reference */
+  --color-panel-bg: #1A1A1A;
 
   /* Type */
   --font-display: 'Space Grotesk', system-ui, sans-serif;
@@ -220,79 +222,309 @@ h1, h2, h3, h4 {
   color: var(--color-text);
 }
 
+
 /* ==========================================================
-   HERO
+   NEW HERO SECTION
    ========================================================== */
-#hero {
-  padding-block: var(--space-5) var(--space-4);
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: var(--space-5);
-  align-items: center;
-}
-
-.hero-headline {
-  font-size: clamp(2.2rem, 5vw, 3.75rem);
-  margin-block: var(--space-2) var(--space-3);
-}
-
-.hero-headline .accent {
-  color: var(--color-accent);
-}
-
-.hero-sub {
-  font-size: 1.05rem;
-  color: var(--color-text-muted);
-  max-width: 46ch;
-  margin-bottom: var(--space-4);
-}
-
-.hero-cta {
+section#hero.hero-bento,
+#hero.hero-bento {
+  /* Zero out the massive padding! The sticky navbar already takes up space. */
+  padding-top: 20px !important; 
+  padding-bottom: 4rem !important;
+  margin-top: 0 !important;
+  min-height: auto !important; 
   display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
+  align-items: flex-start !important; 
+}
+
+.hero-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-inline: var(--space-4);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  width: 100%;
+  align-items: start !important; /* Pins both the Left and Right columns to the ceiling */
+}
+/* Ensure the left column doesn't have a hidden top margin */
+.hero-left {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start; /* Changed from center to pin text to the top */
+  margin-top: 0;
+}
+
+.hero-vertical-track {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.vertical-text {
+  font-family: var(--font-mono);
+  color: var(--color-accent-2); /* Teal color */
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Typography tightening */
+.hero-headline-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: -10px; /* Pulls the text up slightly to offset natural font padding */
+}
+
+.hero-headline-stack h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6.5vw, 6.5rem); 
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.02em;
+  line-height: 0.85; 
+  white-space: nowrap; 
+}
+.text-solid-white {
+  color: var(--color-text);
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-text-muted);
+}
+
+.text-neon {
+  color: var(--color-neon);
+}
+
+/* --- Right Side: Bento Panels --- */
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  justify-content: space-between;
 }
 
 .hero-panel {
+  background: var(--color-panel-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: var(--space-3);
+}
+
+/* ==========================================================
+   Name Panel (Ornate Gold Background)
+   ========================================================== */
+.name-panel {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  overflow: hidden;
-}
-
-.hero-panel-photo {
-  aspect-ratio: 4 / 3;
-  background: var(--color-surface-2);
   display: grid;
   place-items: center;
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  overflow: hidden;
+  padding: 2rem;
+  
+  /* Adds a dark overlay to make text readable, layered over a gold/black texture */
+  background-color: #111;
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)),
+    url('https://images.unsplash.com/photo-1605478051752-65ebbcda304a?q=80&w=1000&auto=format&fit=crop'); 
+  background-size: cover;
+  background-position: center;
+  
+  /* Inner shadow to give the panel depth */
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8); 
 }
 
-.hero-panel-photo img {
+.stylized-name {
+  /* Classic serif font matching the reference */
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.1;
+  text-align: center;
+  letter-spacing: 0.05em;
+  
+  /* Solid white text with a crisp outline */
+  color: #FFFFFF;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+  
+  /* Hard drop shadow to separate the text from the busy background */
+  text-shadow: 
+    2px 2px 0px #000, 
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    1px 1px 0px #000,
+    4px 4px 15px rgba(0,0,0,0.9);
+}
+
+/* ==========================================================
+   Hero Photo Cards
+   ========================================================== */
+.hero-photos-area {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr; 
+  gap: var(--space-3);
+  height: 260px; /* Reduced height to make photos smaller */
+}
+
+.photo-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
+}
+
+.bento-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; 
+  object-position: center; 
+  display: block;
+  transition: transform 0.5s ease;
 }
 
-.location-readout {
-  padding: var(--space-2) var(--space-3);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
+.photo-card:hover .bento-image {
+  transform: scale(1.05); 
+}
+/* Responsive adjustment for the photos */
+@media (max-width: 600px) {
+  .hero-photos-area {
+    grid-template-columns: 1fr; /* Stacks photos vertically on mobile */
+    height: auto;
+  }
+  
+  .photo-card {
+    height: 300px; /* Fixed height for stacked mobile photos */
+  }
+}
+/* ==========================================================
+   Hero Slideshow (3D Stacked Cards)
+   ========================================================== */
+.slideshow-container {
+  position: relative;
+  overflow: hidden; 
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--color-border);
+  /* Remove borders/backgrounds here so the individual cards stand out */
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
-.location-readout .label {
-  color: var(--color-accent-2);
+.slideshow-container .slide {
+  position: absolute;
+  /* Width is reduced to 75% so there is room on the right for the stacked cards to peek out */
+  width: 75%; 
+  height: 100%;
+  left: 0;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  
+  /* Smoothly animates the movement, scale, and blur */
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Position States --- */
+
+/* The front card */
+.slideshow-container .pos-0 {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+  z-index: 10;
+  filter: blur(0);
+}
+
+/* The second card (behind and to the right) */
+.slideshow-container .pos-1 {
+  transform: translateX(20%) scale(0.9);
+  opacity: 0.6;
+  z-index: 9;
+  filter: blur(4px);
+}
+
+/* The third card (further behind) */
+.slideshow-container .pos-2 {
+  transform: translateX(40%) scale(0.8);
+  opacity: 0.3;
+  z-index: 8;
+  filter: blur(8px);
+}
+
+/* Any additional cards hidden in the very back */
+.slideshow-container .pos-hidden {
+  transform: translateX(60%) scale(0.7);
+  opacity: 0;
+  z-index: 1;
+}
+
+/* ==========================================================
+   Location Panel & Radar Scanner (Made Bigger with Map)
+   ========================================================== */
+.location-panel {
+  position: relative;
+  overflow: hidden; 
+  border-left: 4px solid #4FD1C5; /* Hardcoded teal */
+  background-color: #1A1A1A; /* Hardcoded dark gray */
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  padding: 2rem; 
+  
+  /* Hardcoded gradient and a reliable external map image */
+  background-image: 
+    linear-gradient(to right, rgba(26, 26, 26, 0.95) 10%, rgba(26, 26, 26, 0.2) 100%),
+    url('https://www.figuregrounds.com/wp-content/uploads/2021/01/munich_01_figure-ground.jpg'); 
+  background-size: cover;
+  background-position: center;
+}
+
+.loc-data {
+  position: relative;
+  z-index: 2; 
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 1); /* Dark shadow to pop against the map */
+}
+
+/* The scanning line */
+.radar-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 2px;
+  background-color: var(--color-neon);
+  box-shadow: 0 0 20px 4px var(--color-neon);
+  z-index: 1;
+  opacity: 0;
+  animation: radar-scan 4s linear infinite;
+}
+
+@keyframes radar-scan {
+  0% { left: -10%; opacity: 0; }
+  10% { opacity: 0.6; } 
+  90% { opacity: 0.6; } 
+  100% { left: 110%; opacity: 0; }
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 600px) {
+  .hero-photos-area {
+    grid-template-columns: 1fr; 
+    height: auto;
+  }
+  
+  .photo-card {
+    height: 220px; 
+  }
 }
 
 /* ==========================================================
@@ -976,4 +1208,245 @@ footer {
     flex-direction: column;
     align-items: stretch;
   }
+}
+/* ==========================================================
+   Typewriter Animation
+   ========================================================== */
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background-color: var(--color-accent);
+  margin-left: 6px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ==========================================================
+   Main Portrait Adjustment
+   ========================================================== */
+.main-portrait .bento-image {
+  /* Shows the whole image without zooming in */
+  object-fit: default; 
+  
+}
+
+/* ==========================================================
+   Hero Subtext & Buttons
+   ========================================================== */
+.hero-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-subtext {
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 550px;
+  margin-top: 1.5rem; /* Space between "SYSTEMS." and the paragraph */
+  margin-bottom: 1.5rem;
+}
+
+.hero-subtext strong {
+  color: var(--color-text); /* Makes the bold words pop in white */
+  font-weight: 500;
+}
+
+.hero-cta-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Bright Neon Button */
+.btn-neon {
+  background-color: var(--color-neon);
+  color: #0A0E14; /* Dark text for contrast */
+  font-weight: 700;
+  border: 1px solid var(--color-neon);
+  transition: all 0.2s ease;
+}
+
+.btn-neon:hover {
+  background-color: transparent;
+  color: var(--color-neon);
+  box-shadow: 0 0 15px rgba(212, 255, 0, 0.4);
+}
+
+/* Subtle Outline Button */
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  color: var(--color-text);
+  border-color: var(--color-text);
+}
+
+/* ==========================================================
+   About Section - Terminal Window
+   ========================================================== */
+.about-terminal {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  height: fit-content;
+}
+
+.terminal-header {
+  background-color: var(--color-surface-2);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.terminal-header .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dot.red { background-color: #FF5F56; }
+.dot.yellow { background-color: #FFBD2E; }
+.dot.green { background-color: #27C93F; }
+
+.terminal-title {
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.terminal-body {
+  padding: 1.5rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.terminal-body .prompt {
+  color: var(--color-accent-2); /* The teal accent color */
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.terminal-body .output {
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  opacity: 0.9;
+}
+
+/* ==========================================================
+   Education Section
+   ========================================================== */
+.education-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: 2rem;
+  max-width: 1000px; /* Keeps the cards from stretching too wide on massive screens */
+}
+
+.edu-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Subtle glow effect when hovering over an education card */
+.edu-card:hover {
+  border-color: var(--color-neon);
+  box-shadow: 0 4px 25px rgba(212, 255, 0, 0.1); /* Assuming neon is your bright green/yellow */
+  transform: translateY(-2px);
+}
+
+.edu-date {
+  color: var(--color-neon);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.edu-content h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--color-text);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.edu-content h4 {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+}
+
+.edu-content p {
+  color: var(--color-text-muted);
+  margin: 0;
+  opacity: 0.7;
+  font-size: 0.95rem;
+}
+
+/* Responsive side-by-side layout for tablets and desktops */
+@media (min-width: 768px) {
+  .edu-card {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+  
+  .edu-date {
+    min-width: 180px; /* Keeps the dates perfectly aligned in a neat column */
+    flex-shrink: 0;
+    margin-top: 4px; /* Aligns the date text with the H3 heading */
+  }
+}
+
+/* ==========================================================
+   Scroll Reveal Animations
+   ========================================================== */
+/* ==========================================================
+   Scroll Reveal Animations (Slower & Smoother)
+   ========================================================== */
+.reveal {
+  opacity: 0;
+  /* Increased from 40px to 80px so the upward movement is much more noticeable */
+  transform: translateY(80px); 
+  
+  /* Increased duration from 0.8s to 1.4s for a slow, premium glide */
+  transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
