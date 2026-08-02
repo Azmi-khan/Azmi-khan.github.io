@@ -1450,3 +1450,59 @@ footer {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ==========================================================
+   MOBILE & TABLET RESPONSIVENESS (Media Queries)
+   ========================================================== */
+
+/* 📱 FOR TABLETS & LARGE PHONES (Screens under 992px) */
+@media (max-width: 992px) {
+  
+  /* 1. Stack the main hero grid vertically */
+  .hero-container {
+    grid-template-columns: 1fr !important; /* Forces 1 column instead of 2 */
+    gap: 3rem;
+  }
+
+  /* 2. Scale down the massive typography and let it wrap if needed */
+  .hero-headline-stack h1 {
+    font-size: clamp(3rem, 10vw, 4.5rem); 
+    white-space: normal; /* Allows text to wrap so it doesn't break the screen width */
+    line-height: 0.95;
+  }
+
+  /* 3. Give the top a bit more breathing room on mobile */
+  #hero.hero-bento {
+    padding-top: 100px !important;
+  }
+}
+
+/* 📱 FOR SMALL PHONES (Screens under 768px) */
+@media (max-width: 768px) {
+  
+  /* 1. Ensure the bento box photos stack on top of each other */
+  .bento-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+
+  /* 2. Adjust the Terminal Window for small screens */
+  .about-terminal {
+    font-size: 0.75rem; /* Shrinks the text slightly */
+  }
+  
+  .terminal-body {
+    padding: 1rem; /* Less padding so text fits */
+  }
+
+  /* 3. Make buttons stack if things get too tight */
+  .hero-cta-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn {
+    text-align: center;
+    width: 100%;
+  }
+}
